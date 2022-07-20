@@ -1,0 +1,287 @@
+<div class="container py-5">
+  <div class="row py-5 mx-md-5">
+    <div class="col-lg-8">
+      <h1 class="text-center">New Book</h1>
+      <form
+        [formGroup]="newBook"
+        (submit)="newBookSubmitted()"
+        class="example-form"
+      >
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            formControlName="title"
+            type="text"
+            #title
+            maxlength="100"
+          />
+          <mat-error
+            *ngIf="
+              newBook.get('title')?.invalid && newBook.get('title')?.touched
+            "
+          >
+            Please enter a post Title
+          </mat-error>
+          <mat-hint align="end">{{ title.value?.length || 0 }}/100</mat-hint>
+        </mat-form-field>
+
+        <label for="imageUrl">
+          Choose your book's
+          <span class="text-danger fw-bold">Cover Image</span>
+          ( png, jpeg, jpg, maxSize: 16MB)
+        </label>
+        <input
+          class="form-control"
+          type="file"
+          #Image
+          id="imageUrl"
+          name="imageUrl"
+          (change)="onImagePicked($event)"
+        />
+        <br />
+        <label for="bookUrl">
+          Choose your book's
+          <span class="text-danger fw-bold">PDF File</span>
+          ( only pdf, maxSize: 16MB )
+        </label>
+        <input
+          (change)="onFilePicked($event)"
+          class="form-control"
+          #File
+          id="bookUrl"
+          type="file"
+        />
+
+        <mat-form-field class="example-full-width mt-3" appearance="fill">
+          <mat-label>Category</mat-label>
+          <mat-select #categoryName formControlName="categoryName">
+            <mat-option
+              *ngFor="let category of selectCategory"
+              [value]="category.name"
+            >
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Product Description</mat-label>
+          <textarea
+            matInput
+            #description
+            formControlName="description"
+            placeholder="Ex. It makes me feel..."
+            maxlength="1000"
+            rows="5"
+          ></textarea>
+          <mat-hint align="end">
+            {{ description.value?.length || 0 }}/1000
+          </mat-hint>
+        </mat-form-field>
+        <div class="text-end">
+          <button
+            type="submit"
+            mat-flat-button
+            color="warn"
+            class="px-5 fw-bold text-uppercase"
+            [disabled]="newBook.invalid"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-4 d-flex align-items-center justify-content-center my-4">
+      <mat-card class="w-100">
+        <div class="d-flex align-items-center justify-content-center">
+          <img *ngIf="imageUrl" class="img-fluid" [src]="imageUrl" alt="" />
+        </div>
+        <mat-card-title class="text-center fw-bold">
+          {{ title.value | titlecase }}
+        </mat-card-title>
+        <mat-card-content>
+          <p>
+            {{ description.value }}
+          </p>
+        </mat-card-content>
+        <mat-card-actions
+          class="text-end pb-3 d-flex align-items-center justify-content-between"
+        >
+          <div>
+            <button mat-flat-button color="warn" class="fw-bold">
+              <i class="fa-solid fa-download"></i>
+            </button>
+            &nbsp;
+            <button mat-flat-button class="fw-bold read">
+              <i class="fa-solid fa-book-open text-white"></i>
+            </button>
+            &nbsp;
+            <button mat-flat-button color="primary" class="fw-bold">
+              <i class="fa-solid fa-share"></i>
+            </button>
+          </div>
+          <div *ngIf="fileSize">
+            <strong class="text-muted">Size:{{ fileSize | number }} Mb</strong>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-3">
+  <div class="row">
+    <div class="col-md-8 offset-md-2 px-sm-2">
+      <h2 class="text-center text-uppercase text-danger">All Products</h2>
+      <mat-form-field appearance="standard">
+        <mat-label>Filter</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Ex. Apple"
+          #input
+        />
+      </mat-form-field>
+      <div class="TABLE">
+        <mat-table
+          [dataSource]="dataSource"
+          matSort
+          (matSortChange)="announceSortChange($event)"
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Image Url
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let note"
+              (click)="openDialogWithTemplateRef(myDialog)"
+              (click)="getById(note)"
+            >
+              <img
+                src="{{ note.image }}"
+                class="matTableImage"
+                [alt]="note.title"
+              />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td
+              (click)="openDialogWithTemplateRef(myDialog)"
+              (click)="getById(note)"
+              mat-cell
+              class="fw-bold"
+              *matCellDef="let note"
+            >
+              {{ note.title | titlecase }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              description
+            </th>
+            <td
+              (click)="openDialogWithTemplateRef(myDialog)"
+              (click)="getById(note)"
+              id="description"
+              mat-cell
+              *matCellDef="let note"
+            >
+              {{ note.description | lowercase }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="categoryName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              categoryName
+            </th>
+            <td mat-cell *matCellDef="let note">
+              {{ note.categoryName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>edit</th>
+            <td mat-cell *matCellDef="let note">
+              <button mat-button color="warn" (click)="deleteProduct(note)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </mat-table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ******************* MODAL ************************ -->
+  <ng-template #myDialog>
+    <h2 matDialogTitle>{{ getBookById.title | titlecase }}</h2>
+    <mat-dialog-content>
+      <div class="text-center">
+        <img
+          class="modelImageSize img-fluid"
+          src="{{ getBookById.image }}"
+          alt="{{ getBookById.title }}"
+        />
+      </div>
+      <br />
+      <p class="mat-body-1 dialog-style">
+        {{ getBookById.description }}
+      </p>
+      <br />
+      <h3>
+        Category:
+        <span class="fw-bold text-dark">
+          {{ getBookById.categoryName }}
+        </span>
+      </h3>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-flat-button matDialogClose color="primary">
+        Dismiss
+      </button>
+      <button
+        mat-flat-button
+        matDialogClose
+        color="warn"
+        (click)="deleteProduct(getBookById)"
+      >
+        Delete
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <mat-paginator
+    class="w-100"
+    [pageSizeOptions]="[5, 15, 30]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>
+
+<div class="container">
+  <div class="row">
+    <h2 class="text-center">Users</h2>
+    <div class="col-md-8 offset-md-2">
+      <table class="table table-responsive table-striped">
+        <thead>
+          <tr>
+            <th scope="col">name</th>
+            <th scope="col">email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

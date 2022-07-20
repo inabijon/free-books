@@ -1,0 +1,105 @@
+@import '../color.scss';
+.header-h1 h1 {
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+.header-h1 span {
+  color: #ce7852;
+}
+.header-h1 button {
+  border-radius: 15px;
+  background-color: $primary-color;
+  color: $primary-color-text;
+}
+
+// !main
+
+main {
+  background-color: $primary-color;
+}
+.mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+.panel-color {
+  color: $primary-color !important;
+}
+.mat-list-item {
+  cursor: pointer;
+  font-weight: 600;
+}
+.read {
+  background-color: $primary-color;
+  color: $primary-color-text;
+}
+
+.mat-card {
+  width: 100% !important;
+  height: auto;
+}
+.mat-form-field {
+  background-color: #fff;
+}
+.example-full-width {
+  width: 100%;
+}
+#search-box {
+  position: relative;
+  width: 100%;
+}
+.search-result {
+  position: absolute;
+  width: 95% !important;
+  height: auto;
+  background-color: #fff;
+  max-height: 350px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.dialog-style {
+  width: 100%;
+}
+
+.mat-dialog-content {
+  overflow-x: hidden;
+}
+
+.modelImageSize {
+  width: 230px;
+}
+.matTableImage {
+  width: 70px;
+}
+strong {
+  font-size: 13px;
+}
+.mat-input-element {
+  box-sizing: border-box !important;
+}
+.to-top {
+  bottom: 20px;
+  cursor: pointer;
+  margin: 0 8px 12px 0;
+  position: fixed;
+  right: 20px;
+  background-color: $primary-text-color;
+  padding: 10px;
+  color: #fff;
+  border-radius: 10px;
+}
+
+@media (max-width: 500px) {
+  .header-h1 h1 {
+    font-size: 35px;
+  }
+  .search-result {
+    position: absolute;
+    width: 90% !important;
+    height: auto;
+    background-color: #fff;
+    max-height: 350px;
+    overflow-y: auto;
+    z-index: 9999;
+  }
+}

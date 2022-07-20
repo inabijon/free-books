@@ -1,0 +1,11 @@
+{
+  "files.autoSave": "onWindowChange",
+  "editor.defaultFormatter": "SimonSiefke.prettier-vscode",
+  "diffEditor.wordWrap": "on",
+  "editor.wordWrap": "on",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "[html]": {
+    "editor.defaultFormatter": "SimonSiefke.prettier-vscode"
+  }
+}

@@ -1,0 +1,390 @@
+<!-- ****---------------------------HEADER-------------------------- -->
+<div class="sharethis-sticky-share-buttons"></div>
+
+<div id="top" class="container py-5">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="d-flex align-items-center justify-content-start px-3 h-100">
+        <div class="header-h1">
+          <h1>
+            Read
+            <span>your</span>
+          </h1>
+          <h1>
+            favorite
+            <span>Book</span>
+          </h1>
+          <h1>
+            from
+            <span>Here</span>
+          </h1>
+          <button class="btn px-5 py-2 mt-3 text-uppercase fw-bolder">
+            <a href="#main" class="text-decoration-none text-white">
+              Read now
+            </a>
+            <i class="fa-solid fa-right-long"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 p-5">
+      <img
+        src="../../assets/home/book_lover_re_rwjy.svg"
+        class="img-fluid"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
+
+<main class="py-5">
+  <h1 class="text-center text-white">Free Books</h1>
+  <div class="container-fluid" id="main">
+    <!-- *****************SEARCH****************** -->
+    <div class="row mb-5">
+      <div class="col-md-6 offset-md-3">
+        <div class="w-100">
+          <mat-card
+            id="search-box"
+            class="mr-3"
+            style="
+              background: transparent !important;
+              border: none;
+              box-shadow: none;
+            "
+          >
+            <input
+              matInput
+              type="search"
+              class="form-control bg-white px-3 py-2 search-box w-100"
+              #search="ngModel"
+              ngModel
+              name="search"
+              (keyup)="searchBook(search.value)"
+              placeholder="Search your product from here"
+            />
+
+            <ng-template #NoResult></ng-template>
+
+            <!-- * ------------------Result Search--------------------- -->
+            <mat-card
+              class="search-result"
+              style="z-index: 99 !important;"
+              *ngIf="searchData.length >= 1 && search.value.length > 0"
+            >
+              <div
+                *ngIf="search.value.length > 0; else NoResult"
+                class="search-box px-3"
+              >
+                <span *ngIf="searchResultMessage">
+                  {{ searchResultMessage }}
+                </span>
+                <div
+                  *ngFor="let searchResult of searchData"
+                  class="d-flex align-items-center"
+                >
+                  <div
+                    (click)="getById(searchResult)"
+                    (click)="openDialogWithTemplateRef(searchDialog)"
+                    class="flex-shrink-0"
+                  >
+                    <img
+                      data-bs-toggle="modal"
+                      data-bs-target="#searchData"
+                      src="{{ searchResult.image }}"
+                      width="50px"
+                      alt="{{ searchResult.title }}"
+                    />
+                  </div>
+                  <div
+                    (click)="getById(searchResult)"
+                    (click)="openDialogWithTemplateRef(searchDialog)"
+                    class="flex-grow-1 ms-3 text-start fw-bold"
+                  >
+                    {{ searchResult.title }}
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+          </mat-card>
+          <!-- ************************MODAL******************************** -->
+          <!-- ******************* MODAL ************************ -->
+          <ng-template #searchDialog class="w-100" style="z-index: 9999;">
+            <h2 matDialogTitle>{{ getBookById.title | titlecase }}</h2>
+            <mat-dialog-content>
+              <div class="text-center">
+                <img
+                  class="modelImageSize img-fluid"
+                  src="{{ getBookById.image }}"
+                  alt="{{ getBookById.title }}"
+                />
+              </div>
+              <br />
+              <p class="mat-body-1 dialog-style">
+                {{ getBookById.description }}
+              </p>
+              <br />
+              <div class="d-flex align-items-center justify-content-end">
+                <strong class="text-muted">
+                  Size:{{ getBookById.bookSize / 1024 / 1024 | number }} MB
+                </strong>
+                &nbsp; &nbsp;
+                <strong class="text-muted">
+                  Published: {{ getBookById.published | date: 'dd-MM-YYYY' }}
+                </strong>
+              </div>
+            </mat-dialog-content>
+            <mat-dialog-actions align="end">
+              <button
+                *ngIf="userIsAuthenticated"
+                mat-flat-button
+                color="warn"
+                class="fw-bold"
+              >
+                <a
+                  [href]="getBookById.file"
+                  target="_blank"
+                  download
+                  class="text-white text-decoration-none"
+                >
+                  Download
+                  <i class="fa-solid fa-download"></i>
+                </a>
+              </button>
+              &nbsp;
+              <button mat-flat-button matDialogClose color="primary">
+                Close
+              </button>
+            </mat-dialog-actions>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- *****************MAIN CART****************** -->
+    <div class="row">
+      <div class="col-lg-3" style="z-index: 1 !important;">
+        <div class="sticky-top">
+          <mat-accordion style="z-index: -1 !important;">
+            <mat-expansion-panel
+              style="z-index: -1 !important;"
+              [expanded]="isFirst"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title class="fw-bold panel-color">
+                  <i class="fa-solid fa-book"></i>
+                  &nbsp; All Books
+                </mat-panel-title>
+                <mat-panel-description></mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list>
+                <mat-list-item (click)="getAllBook()">All Books</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getIeltsBooks()">Ielts</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getProgrammingBooks()">
+                  Programming
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getArtBooks()">
+                  Art
+                </mat-list-item>
+              </mat-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title class="fw-bold panel-color">
+                  <i class="fa-solid fa-book"></i>
+                  &nbsp; IELTS
+                </mat-panel-title>
+                <mat-panel-description></mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list>
+                <mat-list-item (click)="getSpeaking()">Speaking</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getListening()">
+                  Listening
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getReading()">Reading</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getWriting()">Writing</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getVocabulary()">
+                  Vocabulary
+                </mat-list-item>
+              </mat-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title class="fw-bold panel-color">
+                  <i class="fa-solid fa-book"></i>
+                  &nbsp; PROGRAMMING
+                </mat-panel-title>
+                <mat-panel-description></mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list>
+                <mat-list-item (click)="getFrontend()">Frontend</mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getBackend()">Backend</mat-list-item>
+              </mat-list>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title class="fw-bold panel-color">
+                  <i class="fa-solid fa-book"></i>
+                  &nbsp; ART
+                </mat-panel-title>
+                <mat-panel-description></mat-panel-description>
+              </mat-expansion-panel-header>
+              <mat-list>
+                <mat-list-item (click)="getLiterature()">
+                  literature
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item (click)="getHistorical()">
+                  Historical
+                </mat-list-item>
+              </mat-list>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="py-3">
+          <mat-spinner
+            *ngIf="isLoading"
+            class="mx-auto"
+            color="primary"
+          ></mat-spinner>
+
+          <div *ngIf="!isLoading" fxLayout="row wrap" fxLayoutGap="16px grid">
+            <div
+              fxFlex="25%"
+              fxFlex.xs="100%"
+              fxFlex.md="50%"
+              fxFlex.sm="50%"
+              *ngFor="let book of allBooks"
+              class="d-flex align-items-stretch"
+            >
+              <mat-card>
+                <div class="d-flex align-items-center justify-content-center">
+                  <img
+                    (click)="getById(book)"
+                    (click)="openDialogWithTemplateRef(myDialog)"
+                    class="img-fluid"
+                    [src]="book.image"
+                    alt=""
+                  />
+                </div>
+                <mat-card-actions
+                  class="text-end mt-3 d-flex align-items-center justify-content-end"
+                >
+                  <div>
+                    <button
+                      *ngIf="userIsAuthenticated"
+                      mat-flat-button
+                      color="warn"
+                      class="fw-bold"
+                    >
+                      <a
+                        [href]="book.file"
+                        target="_blank"
+                        download
+                        class="text-white text-decoration-none"
+                      >
+                        <i class="fa-solid fa-download"></i>
+                      </a>
+                    </button>
+                    &nbsp;
+                    <button
+                      (click)="getById(book)"
+                      (click)="openDialogWithTemplateRef(reading)"
+                      mat-flat-button
+                      class="fw-bold read"
+                    >
+                      <i class="fa-solid fa-book-open text-white"></i>
+                    </button>
+                  </div>
+                </mat-card-actions>
+                <div class="d-flex align-items-center justify-content-between">
+                  <strong class="text-muted">
+                    Size:{{ book.bookSize / 1024 / 1024 | number }} MB
+                  </strong>
+                  <strong class="text-muted">
+                    {{ book.published | date: 'dd-MM-YYYY' }}
+                  </strong>
+                </div>
+              </mat-card>
+
+              <!-- ************************MODAL******************************** -->
+              <!-- ******************* MODAL ************************ -->
+              <ng-template
+                #myDialog
+                class="w-100"
+                style="z-index: 99999 !important;"
+              >
+                <h2 matDialogTitle class="fw-bold">
+                  {{ getBookById.title | titlecase }}
+                </h2>
+                <mat-dialog-content>
+                  <div class="text-center">
+                    <img
+                      class="modelImageSize img-fluid"
+                      src="{{ getBookById.image }}"
+                      alt="{{ getBookById.title }}"
+                    />
+                  </div>
+                  <br />
+                  <p class="mat-body-2 dialog-style">
+                    {{ getBookById.description }}
+                  </p>
+                  <br />
+                </mat-dialog-content>
+                <mat-dialog-actions align="end">
+                  <button mat-flat-button matDialogClose color="primary">
+                    Close
+                  </button>
+                </mat-dialog-actions>
+              </ng-template>
+
+              <!-- *******************READING MODAL ************************ -->
+              <ng-template
+                #reading
+                class="w-100"
+                style="z-index: 9999; width: 100% !important;"
+              >
+                <h2 matDialogTitle class="text-center fw-bold">
+                  {{ getBookById.title | titlecase }}
+                </h2>
+                <mat-dialog-content
+                  style="overflow-y: hidden !important; overflow: auto;"
+                >
+                  <pdf-viewer
+                    [src]="getBookById.file"
+                    [render-text]="false"
+                    [original-size]="false"
+                    [fit-to-page]="true"
+                    [autoresize]="true"
+                    [zoom-scale]="'page-height'"
+                    style="width: 600px; height: 450px;"
+                  ></pdf-viewer>
+                </mat-dialog-content>
+                <mat-dialog-actions align="end">
+                  <button mat-flat-button matDialogClose color="primary">
+                    Close
+                  </button>
+                </mat-dialog-actions>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<a href="#top" class="text-white text-decoration-none">
+  <div class="to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </div>
+</a>

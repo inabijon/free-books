@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~bootstrap/dist/css/bootstrap.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&family=Lato:wght@300&family=Open+Sans&family=Sora&display=swap');
+@import '~ngx-toastr/toastr';
+
+html,
+body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+html {
+  overflow: auto;
+  overflow-x: hidden;
+}
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+.sb-icon {
+  background-color: red !important;
+}

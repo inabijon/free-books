@@ -1,0 +1,11 @@
+@import '../color.scss';
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+.mat-toolbar {
+  background-color: $primary-color;
+}
+.book-navbar {
+  color: #ffeb3b;
+}
